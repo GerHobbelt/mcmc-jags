@@ -21,7 +21,7 @@ namespace bugs {
 
 double logdet(double const *a, unsigned long n)
 {
-   // Log determinant of n x n symmetric positive matrix a */
+   // Log determinant of n x n symmetric positive-definite matrix a */
   if(n == 2)
   {
     return log(a[0]*a[3] - a[1]*a[2]);
@@ -29,29 +29,22 @@ double logdet(double const *a, unsigned long n)
   else
   {
   unsigned long N = n*n;
-    double *acopy = new double[N];
-  for (unsigned int i = 0; i < N; i++) {
-      acopy[i] = a[i];
-    }
+  vector <double> acopy(N);
+  copy(a, a + N, acopy.begin());
      
-    double *w = new double[n];
+  vector<double> w(n);
     int lwork = -1;
     double worktest = 0;
     int info = 0;
   int ni = asInteger(n);
-  F77_DSYEV("N","U", &ni, acopy, &ni, w, &worktest, &lwork, &info);
+  F77_DSYEV("N","L", &ni, &acopy[0], &ni, &w[0], &worktest, &lwork, &info);
     if (info != 0) {
-      delete [] acopy;
-      delete [] w;
       throwRuntimeError("unable to calculate workspace size for dsyev");
     }
     lwork = static_cast<int>(worktest);
-    double *work = new double[lwork];
-  F77_DSYEV("N","U", &ni, acopy, &ni, w, work, &lwork, &info);
-    delete [] acopy;
-    delete [] work;
+  vector<double> work(lwork);
+  F77_DSYEV("N","L", &ni, &acopy[0], &ni, &w[0], &work[0], &lwork, &info);
     if (info != 0) {
-      delete [] w;
       throwRuntimeError("unable to calculate eigenvalues in dsyev");
     }
   
@@ -60,10 +53,9 @@ double logdet(double const *a, unsigned long n)
     }
   
     double logdet = 0;
-    for (int i = 0; i < n; i++) {
+  for (unsigned long i = 0; i < n; i++) {
       logdet += log(w[i]);
     }
-    delete [] w;
   
     return logdet;
   }
@@ -92,7 +84,7 @@ bool check_symmetric_ispd(double const *a, unsigned long n)
       double worktest = 0;
       int info = 0;
     int ni = asInteger(n);
-    F77_DSYEV("N","U", &ni, &acopy[0], &ni, &w[0], &worktest, &lwork, &info);
+    F77_DSYEV("N","L", &ni, &acopy[0], &ni, &w[0], &worktest, &lwork, &info);
       if (info != 0) {
   	throwRuntimeError("unable to calculate workspace size for dsyev");
       }
@@ -100,7 +92,7 @@ bool check_symmetric_ispd(double const *a, unsigned long n)
     vector<double> work(static_cast<unsigned long>(lwork));
   
       //Calculate eigenvalues
-    F77_DSYEV("N","U", &ni, &acopy[0], &ni, &w[0], &work[0], &lwork, &info);
+    F77_DSYEV("N","L", &ni, &acopy[0], &ni, &w[0], &work[0], &lwork, &info);
       if (info != 0) {
   	throwRuntimeError("unable to calculate eigenvalues in dsyev");
       }
@@ -161,7 +153,7 @@ double det(double const *a, int n)
 */
 
 
-bool inverse_spd (double *X, double const *A, unsigned long n)
+bool inverse_chol (double *X, double const *A, unsigned long n)
 {
     /* invert n x n symmetric positive definite matrix A. Put result in X*/
     //FIXME: This needs testing after being rewritten
@@ -173,7 +165,7 @@ bool inverse_spd (double *X, double const *A, unsigned long n)
     int ni = asInteger(n);
     F77_DPOTRF ("L", &ni, X, &ni, &info);
     if (info < 0) {
-	throwLogicError("Illegal argument in inverse_spd");
+	throwLogicError("Illegal argument in inverse_chol");
     }
     else if (info > 0) {
 	throwRuntimeError("Cannot invert matrix: not positive definite");
@@ -185,7 +177,7 @@ bool inverse_spd (double *X, double const *A, unsigned long n)
 
     for (unsigned long i = 0; i < n; ++i) {
 	for (unsigned long j = 0; j < i; ++j) {
-	    X[i*n + j] = X[j*n + i];
+	    X[j*n + i] = X[i*n + j];
 	}
     }
 
@@ -193,7 +185,7 @@ bool inverse_spd (double *X, double const *A, unsigned long n)
 }
 
 
-bool inverse (double *X, double const *A, unsigned long n)
+bool inverse_lu (double *X, double const *A, unsigned long n)
 {
     /* invert n x n matrix A. Put result in X */
 
@@ -214,6 +206,7 @@ bool inverse (double *X, double const *A, unsigned long n)
     return info == 0;
 }
 
+    /*
 bool check_symmetry(double const *x, unsigned long n, double tol)
 {
     for (unsigned long i = 1; i < n; ++i) {
@@ -227,5 +220,6 @@ bool check_symmetry(double const *x, unsigned long n, double tol)
     }
     return true;
 }
+    */
 
 }}
