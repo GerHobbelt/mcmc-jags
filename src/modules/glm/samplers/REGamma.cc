@@ -87,6 +87,8 @@ namespace jags {
 
 	    //Rescale random effects
 	    rescaleSigma(&sigma1, &sigma0, 1);
+		double mu = *eps[i]->parents()[0]->value(_chain);
+		eval[i] = mu + (Y - mu) * sigma_ratio;
 	}
 
 	bool REGamma::isAdaptive() const
