@@ -1,0 +1,6 @@
+add_library(module OBJECT Module.cc ModuleError.cc)
+if(WIN32)
+	target_compile_definitions(module PRIVATE MAKE_DLL)
+else()
+	target_compile_options(module PRIVATE -fPIC)
+endif()

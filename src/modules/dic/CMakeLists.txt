@@ -1,0 +1,5 @@
+set(dicSources dic.cc DevianceMean.cc DevianceTrace.cc DevianceMonitorFactory.cc PDMonitor.cc PoptMonitor.cc PDMonitorFactory.cc PDTrace.cc PDTraceFactory.cc)
+set(dicHeaders DevianceMean.h DevianceTrace.h DevianceMonitorFactory.h PDMonitor.h PoptMonitor.h PDMonitorFactory.h	PDTrace.h PDTraceFactory.h)
+add_library(dic STATIC ${dicSources} ${dicHeaders})
+target_include_directories(dic PRIVATE .)
+install(TARGETS dic DESTINATION lib/JAGS/modules-5)
