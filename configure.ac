@@ -156,6 +156,7 @@ AC_CONFIG_FILES([
   win/runtime64/Makefile
   doc/Makefile
   doc/manual/Makefile
+  doc/manual/version
   doc/manual/figures/Makefile
   test/Makefile
 ])

@@ -1,11 +1,15 @@
-Changes in JAGS 4.4.0
+Changes in JAGS 5.0.0
 
-Bug fixes
+Bug Fixes
 =========
 * The terminal interface will now dump the current values of all nodes
   when a sampler gets stuck (as stated in the manual).
 * Requesting a monitored variable with an incorrect number of dimensions
   now gives an informative error rather than a LOGIC ERROR.
+* LogicalNodes with fixed values now correctly report whether or not they
+  are discrete valued via the isDiscreteValued() member function.
+
+
 
 New features
 ============

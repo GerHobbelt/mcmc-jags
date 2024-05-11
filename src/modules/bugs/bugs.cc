@@ -44,6 +44,10 @@
 #include <functions/ArcSinh.h>
 #include <functions/ArcTan.h>
 #include <functions/ArcTanh.h>
+#include <functions/BesselI.h>
+#include <functions/BesselJ.h>
+#include <functions/BesselK.h>
+#include <functions/BesselY.h>
 #include <functions/CLogLog.h>
 #include <functions/Combine.h>
 #include <functions/Cos.h>
@@ -156,6 +160,10 @@ namespace bugs {
 	insert(new ArcSinh);
 	insert(new ArcTan);
 	insert(new ArcTanh);
+	insert(new BesselI);
+	insert(new BesselJ);
+	insert(new BesselK);
+	insert(new BesselY);
 	insert(new Combine);
 	insert(new Cos);
 	insert(new Cosh);
@@ -205,13 +213,13 @@ namespace bugs {
 	//Load sampler factories
 	insert(new MNormalFactory);
 	insert(new DirichletFactory);
+	insert(new BinomSliceFactory);
 	insert(new ConjugateFactory);
 	//insert(new REFactory);
 	insert(new DSumFactory);
 	insert(new SumFactory);
 	insert(new CensoredFactory);
 	insert(new RW1Factory);
-	insert(new BinomSliceFactory);
     }
 
     BUGSModule::~BUGSModule() {
