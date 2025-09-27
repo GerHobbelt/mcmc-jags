@@ -673,7 +673,7 @@ typedef struct cholmod_common_struct
 	    *
 	    * If prune_dense < 0, only completely dense rows/cols are removed.
 	    *
-	    * This paramater is also the dense column control for COLAMD and
+	    * This parameter is also the dense column control for COLAMD and
 	    * CCOLAMD.  For an m-by-n matrix, columns with more than
 	    * MAX (16, prune_dense * sqrt (MIN (m,n))) entries are removed prior
 	    * to ordering.  They appear at the end of the re-ordered matrix.
